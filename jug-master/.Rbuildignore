@@ -1,0 +1,9 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\var
+README.md
+test_files
+^\.travis\.yml$
+var
+Dockerfile
+^docs$

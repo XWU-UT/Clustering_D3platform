@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CO-CLUSTERING ANALYSIS</title>
+  <link rel="stylesheet" type="text/css" href="css/vendor/bulma.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <script type="text/javascript" src="js/vendor/d3.min.js"></script>
+  <script type="text/javascript" src="js/vendor/d3.tip.js"></script>
+  <script type="text/javascript" src="js/vendor/topojson.js"></script>
+  <script type="text/javascript" src="js/vendor/d3-scale-chromatic.v1.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  <div id="divClustering" class="clustering">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <div class="tile is-child box">
+          <nav class="nav">
+            <div class="nav-left">
+              <p class="nav-item">
+                <span class="icon">
+                  <i class="fa fa-database"></i>
+                </span>
+                <span><strong> Dataset </strong></span>
+              </p>
+            </div>
+          </nav>
+
+            <div class="fileUpload">
+              <div id="divFiles">
+                <label>Upload <strong>1</strong> attributes file (.csv)</label>
+                <input type="file" id="csvFileInput" accept=".csv"> <br/>
+                <label>
+                  Upload <strong>1</strong> polygon map file (.geojson)
+                </label>
+                <input type="file" id="mapFileInput">
+              </div>
+            </div>
+        </div>
+
+        <div class="tile is-child box">
+          <div class="column">
+
+            <div class="columns is-mobile">
+              <div class="column">
+                <label><small>num. of row-clusters </small></label><input id="numRC" value="4" type="number"> <br/>
+                <label><small>num. of column-clusters </small></label><input id="numCC" value="4" type="number">
+              </div>
+                <div class="column"><button id="btnClustering" class="button is-primary" onclick="coClustering()"> co-clustering </button></div>
+              <div class="column">
+                <label><small>num. of outer iterations </small></label><input id="innerIter" value="5"  type="number"> <br/>
+                <label><small>num. of inner iterations </small></label><input id="outerIter" value="10" type="number">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tile is-ancestor is-marginless is-paddingless">
+    <div class="tile is-6 is-vertical is-parent">
+      <div class="tile is-child is-12 box">
+        <div class="nav-left">
+            <p class="nav-item">
+              <span class="icon">
+                <i class="fa fa-map" aria-hidden="true"></i>
+              </span>
+              <span><strong> GeoMap </strong></span>
+            </p>
+        </div>
+        <div>
+          <button id="btnMap" class="toggle button is-primary is-outlined" onclick="toggleMap()">toggleMap</button>
+        </div>
+        <div id="divMap" class="map">
+        </div>
+        <div id="legendMap" class="legend">
+          <div id="divColorOptions" class="field">
+            <div class="control">
+              <div class="select">
+                <select id="colorOptions" onchange="setColorScheme()">
+                  <option disabled="disabled" role="separator">-----Diverging-----</option>
+                  <option value="RdYlBu" selected>red-yellow-blue</option>
+                  <option value="BrBG">brown-blue-green</option>
+                  <option value="PRGn">purple-red-green</option>
+                  <option value="PiYG">pink-yellow-green</option>
+                  <option value="PuOr">purple-orange</option>
+                  <option value="RdBu">red-blue</option>
+                  <option value="RdGy">red-grey</option>
+                  <option value="RdYlGn">red-yellow-green</option>
+                  <option value="Spectral">spectral</option>
+                  <option disabled="disabled" role="separator">-----Sequential-----</option>
+                  <option disabled="disabled" role="separator">---Single hue---</option>
+                  <option value="Reds">red</option>
+                  <option value="Greens">green</option>
+                  <option value="Blues">blue</option>
+                  <option value="Greys">grey</option>
+                  <option value="Oranges">orange</option>
+                  <option value="Purples">purple</option>
+                  <option disabled="disabled" role="separator">---Multi-hue---</option>
+                  <option value="BuGn">blue-green</option>
+                  <option value="BuPu">blue-purple</option>
+                  <option value="GnBu">green-blue</option>
+                  <option value="OrRd">orange-red</option>
+                  <option value="PuBuGn">purple-blue-green</option>
+                  <option value="PuBu">purple-blue</option>
+                  <option value="PuRd">purple-red</option>
+                  <option value="YlGnBu">yellow-green-blue</option>
+                  <option value="YlOrBr">yellow-orange-brown</option>
+                  <option value="YlOrRd">yellow-orange-red</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tile is-6 is-vertical is-parent">
+      <div class="tile is-child box">
+        <div id="divTimeline" class="timeline">
+            <div class="nav-left">
+              <p class="nav-item">
+                <span class="icon">
+                  <i class="fa fa-line-chart" aria-hidden="true"></i>
+                </span>
+                <span><strong> Timeline </strong></span>
+              </p>
+            </div>
+            <div>
+              <button id="btnTL" class="toggle button is-primary is-outlined" onclick="toggleTL()">toggleTimeline</button>
+            </div>
+        </div>
+
+        <div id="divHeatMap" class="heatmap">
+            <div class="nav-left">
+              <p class="nav-item">
+                <span class="icon">
+                  <i class="fa fa-delicious" aria-hidden="true"></i>
+                </span>
+                <span><strong> HeatMap </strong></span>
+              </p>
+            </div>
+            <div>
+              <button id="btnHM" class="toggle button is-primary is-outlined" onclick="toggleHM()">toggleHeatmap</button>
+            </div>
+        </div>
+      </div>
+      <div id="divBound">
+        <label id="btnSel" class="selHM button is-info is-outlined" title="click 2 locations & 2 timestamps in the axes to see patterns" onclick="drawBoundsCo()">select observe area</label>
+        <button id="btnClear" class="selHM button is-info is-outlined" title="clear selected locations & timestamps" onclick="clearBoundsCo()">clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="tile is-ancestor is-marginless is-paddingless">
+    <div class="tile is-12 is-parent">
+      <div class="tile is-child box">
+        <nav class="nav">
+          <div class="nav-left">
+            <p class="nav-item">
+              <span class="icon">
+                <i class="fa fa-map" aria-hidden="true"></i>
+                <i class="fa fa-map" aria-hidden="true"></i>
+              </span>
+              <span><strong><br> Smallmultiples</br></strong></span>
+            </p>
+          </div>
+        </nav>
+        <div id="divSmallMultiples" class="smallmultiple">
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript" src="js/graphs/map.js"></script>
+<script type="text/javascript" src="js/graphs/timeline.js"></script>
+<script type="text/javascript" src="js/graphs/heatMap.js"></script>
+<script type="text/javascript" src="js/graphs/smallMultiples.js"></script>
+<script type="text/javascript" src="js/graphs/interactions.js"></script>
+<script type="text/javascript" src="js/helpers.js"></script>
+<script type="text/javascript" src="js/parseData.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>
