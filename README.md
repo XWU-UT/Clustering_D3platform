@@ -1,6 +1,6 @@
-## Clustering_D3platform_CAGEO
+## Clustering_D3platform
 
-#### This codes is to build an interactive geovisual analytics platform where a co-clustering algorithm (BBAC_I) can be applied to various datasets
+#### This source code is to build an interactive geovisual analytics platform where a co-clustering algorithm (BBAC_I) can be applied to various datasets
 
 The installation of Python (version2x, and no version3x installed), R (R-3.4.4 is recommended) and RStudio is needed. Clone the files
 to the local path and then follows the next two steps
@@ -18,7 +18,7 @@ e.g. set PATH=%PATH%;C:\Python27\ArcGIS10.2\
 
 2. Use the other terminal to set up jug connection which is used to connect the R server to the client side
 install jug package in Rstudio, only needed in the first time (use install.packages in case that dependences are not installed automatically)
-##### open jug.Rproj in jug-master file in RStudio and go to menu Build|Install and Restart 
+##### open jug.Rproj in jug-master file in RStudio and go to menu Build|Install and Restart
 
   - open the other terminal to go to server directory to run R code to start the jug connection
 ##### cd ...\Clustering_D3platform\server
