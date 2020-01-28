@@ -1,6 +1,7 @@
 ## Clustering_D3platform
 
 #### This source code is to build an interactive geovisual analytics platform where a co-clustering algorithm (BBAC_I) can be applied to various datasets
+##### To use the code, please cite the paper accepted in Computers & Geosciences: An interactive web-based geovisual analytics platform for co-clustering spatio-temporal data, by Xiaojing Wu, Ate Poorthuis, Raul Zurita-Milla and Menno-Jan Kraak
 
 The installation of Python (version2x, and no version3x installed), R (R-3.4.4 is recommended) and RStudio is needed. Clone the files
 to the local path and then follows the next two steps
